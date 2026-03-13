@@ -288,14 +288,20 @@ with tab3:
             h["Ticker"] = h["Ticker"].str.upper().str.strip()
             tickers = h["Ticker"].tolist()
 
-            # Fetch live prices
+            # Fetch live prices — batch download is more reliable than
+            # calling fast_info individually (first call often returns None)
             with st.spinner("Fetching live prices…"):
-                live = {}
-                for tk in tickers:
-                    try:
-                        live[tk] = yf.Ticker(tk).fast_info.last_price
-                    except Exception:
-                        live[tk] = None
+                try:
+                    dl = yf.download(tickers, period="2d", progress=False, auto_adjust=True)
+                    if isinstance(dl.columns, pd.MultiIndex):
+                        close = dl["Close"]
+                    else:
+                        close = dl[["Close"]]
+                        close.columns = tickers
+                    last_row = close.dropna(how="all").iloc[-1]
+                    live = last_row.to_dict()
+                except Exception:
+                    live = {tk: None for tk in tickers}
 
             h["Live_Price"] = h["Ticker"].map(live)
             h["Cost_Basis"]    = h["Quantity"] * h["Avg_Cost"]
