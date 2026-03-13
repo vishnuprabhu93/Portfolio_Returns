@@ -197,21 +197,55 @@ with tab2:
                     f"That's **{abs(beat) * 100:.1f}% {sign}** the historical S&P 500 average (~10%)."
                 )
 
-            # Cumulative invested vs. current value bar
+            # Build chart: contributions stop at last period, but holding extends to today
             cum_inv = [contrib * (i + 1) for i in range(int(n_periods))]
             chart_d = [first_date + relativedelta(months=i * months_step)
                        for i in range(int(n_periods))]
 
+            # Extend the invested line flat from last contribution → today
+            last_contrib_date = chart_d[-1]
+            today = date.today()
+            if today > last_contrib_date:
+                chart_d_ext  = chart_d  + [today]
+                cum_inv_ext  = cum_inv  + [total_invested]   # flat — no new money added
+            else:
+                chart_d_ext  = chart_d
+                cum_inv_ext  = cum_inv
+
             fig2 = go.Figure()
-            fig2.add_trace(go.Scatter(x=chart_d, y=cum_inv, mode="lines",
-                                      fill="tozeroy", fillcolor="rgba(150,150,150,0.15)",
-                                      line=dict(color="gray", dash="dash", width=2),
-                                      name="Total Invested"))
-            fig2.add_hline(y=port_val, line_color="#2ca02c", line_dash="dot",
-                           annotation_text=f"Current: ${port_val:,.0f}",
-                           annotation_position="bottom right")
-            fig2.update_layout(yaxis_tickprefix="$", yaxis_tickformat=",.0f",
-                               height=260, margin=dict(t=10, b=10), legend=dict(x=0, y=1))
+
+            # Shaded area: total amount invested over time
+            fig2.add_trace(go.Scatter(
+                x=chart_d_ext, y=cum_inv_ext, mode="lines",
+                fill="tozeroy", fillcolor="rgba(150,150,150,0.15)",
+                line=dict(color="gray", dash="dash", width=2),
+                name="Total Invested"
+            ))
+
+            # Single marker: current portfolio value at today
+            fig2.add_trace(go.Scatter(
+                x=[today], y=[port_val],
+                mode="markers+text",
+                marker=dict(color="#2ca02c", size=12, symbol="diamond"),
+                text=[f"  Current Value: ${port_val:,.0f}"],
+                textposition="middle right",
+                name="Current Value"
+            ))
+
+            # Vertical dashed line marking end of contributions
+            fig2.add_vline(
+                x=str(last_contrib_date),
+                line_dash="dot", line_color="orange", line_width=1.5,
+                annotation_text="Last contribution",
+                annotation_position="top right",
+                annotation_font_color="orange"
+            )
+
+            fig2.update_layout(
+                yaxis_tickprefix="$", yaxis_tickformat=",.0f",
+                height=300, margin=dict(t=20, b=10),
+                legend=dict(x=0, y=1)
+            )
             st.plotly_chart(fig2, use_container_width=True)
 
     else:  # Advanced cash flow table
