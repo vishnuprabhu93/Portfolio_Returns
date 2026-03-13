@@ -216,14 +216,55 @@ with tab2:
 
     else:  # Advanced cash flow table
         st.markdown("##### Enter Cash Flows")
-        st.caption("Contributions = negative (money out of your pocket). "
-                   "Last row = today's portfolio value (positive).")
+        st.caption("Contributions = **negative** (money out of your pocket). "
+                   "Last row = today's portfolio value (**positive**).")
 
-        default_cf = pd.DataFrame({
+        # Template download for advanced mode
+        adv_tmpl = pd.DataFrame({
             "Date":   ["2019-01-01", "2020-01-01", "2021-01-01",
                        "2022-01-01", "2023-01-01", "2024-01-01", "2025-03-13"],
             "Amount": [-5000, -5000, -5000, -5000, -5000, -5000, 42000],
         })
+        adv_buf = BytesIO()
+        with pd.ExcelWriter(adv_buf, engine="openpyxl") as w:
+            adv_tmpl.to_excel(w, index=False, sheet_name="CashFlows")
+        st.download_button("📥 Download Cash Flow Template",
+                           data=adv_buf.getvalue(),
+                           file_name="cashflow_template.xlsx",
+                           mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                           key="adv_tmpl_dl")
+
+        # File uploader
+        adv_upload = st.file_uploader("Upload your cash flow file (Excel or CSV) — or edit the table below",
+                                      type=["xlsx", "csv"], key="adv_upload")
+
+        # Populate table from upload if provided, otherwise use defaults
+        if adv_upload:
+            try:
+                if adv_upload.name.endswith(".csv"):
+                    uploaded_cf = pd.read_csv(adv_upload)
+                else:
+                    uploaded_cf = pd.read_excel(adv_upload)
+                uploaded_cf.columns = [c.strip().title() for c in uploaded_cf.columns]
+                # Normalise: accept "Date"/"date", "Amount"/"amount"/"Cash Flow" etc.
+                col_map = {}
+                for c in uploaded_cf.columns:
+                    if "date" in c.lower():
+                        col_map[c] = "Date"
+                    elif any(k in c.lower() for k in ["amount", "cash", "flow", "value"]):
+                        col_map[c] = "Amount"
+                uploaded_cf = uploaded_cf.rename(columns=col_map)[["Date", "Amount"]]
+                uploaded_cf["Date"] = pd.to_datetime(uploaded_cf["Date"]).dt.strftime("%Y-%m-%d")
+                default_cf = uploaded_cf
+                st.success(f"Loaded {len(default_cf)} rows from file.")
+            except Exception as e:
+                st.warning(f"Could not parse uploaded file: {e}. Using default table.")
+                default_cf = adv_tmpl.copy()
+                default_cf["Date"] = default_cf["Date"].astype(str)
+        else:
+            default_cf = adv_tmpl.copy()
+            default_cf["Date"] = default_cf["Date"].astype(str)
+
         edited = st.data_editor(default_cf, num_rows="dynamic", use_container_width=True)
 
         if st.button("Calculate XIRR", type="primary", key="adv_btn"):
@@ -236,11 +277,23 @@ with tab2:
                 res = xirr(cf_list, dt_list)
                 total_in = abs(sum(x for x in cf_list if x < 0))
                 final_v = sum(x for x in cf_list if x > 0)
+                total_ret_pct = (final_v - total_in) / total_in if total_in > 0 else 0
+                years_adv = (dt_list[-1] - dt_list[0]).days / 365.25
 
-                c1, c2, c3 = st.columns(3)
+                c1, c2, c3, c4 = st.columns(4)
                 c1.metric("Total Invested", f"${total_in:,.2f}")
                 c2.metric("Final Value", f"${final_v:,.2f}")
-                c3.metric("XIRR", f"{res * 100:.2f}%" if res else "N/A")
+                c3.metric("Total Return", f"${final_v - total_in:+,.2f}",
+                          delta=f"{total_ret_pct * 100:+.2f}%")
+                c4.metric("XIRR", f"{res * 100:.2f}%" if res else "N/A")
+
+                if res:
+                    beat = res - 0.10
+                    sign = "above" if beat >= 0 else "below"
+                    st.info(
+                        f"**XIRR of {res * 100:.2f}%** over {years_adv:.1f} years. "
+                        f"That's **{abs(beat) * 100:.1f}% {sign}** the historical S&P 500 average (~10%)."
+                    )
             except Exception as e:
                 st.error(f"Could not calculate: {e}")
 
