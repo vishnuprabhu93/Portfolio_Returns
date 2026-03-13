@@ -233,12 +233,19 @@ with tab2:
             ))
 
             # Vertical dashed line marking end of contributions
-            fig2.add_vline(
-                x=str(last_contrib_date),
-                line_dash="dot", line_color="orange", line_width=1.5,
-                annotation_text="Last contribution",
-                annotation_position="top right",
-                annotation_font_color="orange"
+            # (add_shape + add_annotation is more compatible across Plotly versions)
+            fig2.add_shape(
+                type="line",
+                x0=last_contrib_date, x1=last_contrib_date,
+                y0=0, y1=1, yref="paper",
+                line=dict(color="orange", dash="dot", width=1.5)
+            )
+            fig2.add_annotation(
+                x=last_contrib_date, y=0.97, yref="paper",
+                text="Last contribution",
+                showarrow=False,
+                font=dict(color="orange", size=11),
+                xanchor="left", yanchor="top"
             )
 
             fig2.update_layout(
