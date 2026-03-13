@@ -2,7 +2,7 @@
 
 A free, open-source Streamlit web app for calculating investment returns across three scenarios — lump sum, DCA/periodic contributions, and full portfolio analysis with live prices and risk metrics.
 
-**[Live App →]([https://share.streamlit.io](https://portfolioreturns.streamlit.app/))**
+**[Live App →](https://share.streamlit.io)** *(https://portfolioreturns.streamlit.app/)*
 
 ---
 
