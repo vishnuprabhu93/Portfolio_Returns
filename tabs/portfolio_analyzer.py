@@ -6,7 +6,10 @@ import plotly.graph_objects as go
 import plotly.express as px
 from io import BytesIO
 
-from theme import COLOR_POSITIVE, COLOR_NEGATIVE, COLOR_PRIMARY, COLOR_PRIMARY_FILL_LIGHT, PIE_COLOR_SEQUENCE, CORRELATION_COLOR_SCALE
+from theme import (
+    COLOR_POSITIVE, COLOR_NEGATIVE, COLOR_PRIMARY, COLOR_PRIMARY_FILL_LIGHT,
+    COLOR_GRAY, PIE_COLOR_SEQUENCE, CORRELATION_COLOR_SCALE,
+)
 
 
 def render():
@@ -112,7 +115,7 @@ def render():
             with c1:
                 st.markdown("#### Allocation by Current Value")
                 fig_pie = px.pie(h, values="Current_Value", names="Ticker",
-                                 color_discrete_sequence=getattr(px.colors.qualitative, PIE_COLOR_SEQUENCE))
+                                 color_discrete_sequence=PIE_COLOR_SEQUENCE)
                 fig_pie.update_traces(textposition="inside", textinfo="percent+label")
                 fig_pie.update_layout(height=340, margin=dict(t=20, b=0),
                                       showlegend=False)
@@ -174,7 +177,7 @@ def render():
                                                     fillcolor=COLOR_PRIMARY_FILL_LIGHT,
                                                     line=dict(color=COLOR_PRIMARY, width=2),
                                                     name="Portfolio"))
-                        fig_eq.add_hline(y=1.0, line_dash="dash", line_color="gray")
+                        fig_eq.add_hline(y=1.0, line_dash="dash", line_color=COLOR_GRAY)
                         fig_eq.update_layout(yaxis_title="Growth of $1",
                                              height=280, margin=dict(t=10, b=10),
                                              showlegend=False)

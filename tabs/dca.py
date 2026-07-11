@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 from io import BytesIO
 
 from calculations import xirr
-from theme import COLOR_POSITIVE
+from theme import COLOR_POSITIVE, COLOR_NEUTRAL_FILL, COLOR_GRAY, COLOR_HIGHLIGHT
 
 
 def render():
@@ -91,8 +91,8 @@ def render():
             # Shaded area: total amount invested over time
             fig2.add_trace(go.Scatter(
                 x=chart_d_ext, y=cum_inv_ext, mode="lines",
-                fill="tozeroy", fillcolor="rgba(150,150,150,0.15)",
-                line=dict(color="gray", dash="dash", width=2),
+                fill="tozeroy", fillcolor=COLOR_NEUTRAL_FILL,
+                line=dict(color=COLOR_GRAY, dash="dash", width=2),
                 name="Total Invested"
             ))
 
@@ -112,13 +112,13 @@ def render():
                 type="line",
                 x0=last_contrib_date, x1=last_contrib_date,
                 y0=0, y1=1, yref="paper",
-                line=dict(color="orange", dash="dot", width=1.5)
+                line=dict(color=COLOR_HIGHLIGHT, dash="dot", width=1.5)
             )
             fig2.add_annotation(
                 x=last_contrib_date, y=0.97, yref="paper",
                 text="Last contribution",
                 showarrow=False,
-                font=dict(color="orange", size=11),
+                font=dict(color=COLOR_HIGHLIGHT, size=11),
                 xanchor="left", yanchor="top"
             )
 

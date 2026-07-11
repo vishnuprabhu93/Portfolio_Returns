@@ -4,7 +4,7 @@ from datetime import date, timedelta
 import plotly.graph_objects as go
 
 from calculations import cagr
-from theme import COLOR_PRIMARY, COLOR_PRIMARY_FILL
+from theme import COLOR_PRIMARY, COLOR_PRIMARY_FILL, COLOR_GRAY
 
 
 def render():
@@ -57,7 +57,7 @@ def render():
                                      fillcolor=COLOR_PRIMARY_FILL,
                                      line=dict(color=COLOR_PRIMARY, width=2),
                                      name="Portfolio Value"))
-            fig.add_hline(y=initial, line_dash="dash", line_color="gray",
+            fig.add_hline(y=initial, line_dash="dash", line_color=COLOR_GRAY,
                           annotation_text=f"Initial: ${initial:,.0f}")
             fig.update_layout(yaxis_tickprefix="$", yaxis_tickformat=",.0f",
                                height=260, margin=dict(t=10, b=10),
