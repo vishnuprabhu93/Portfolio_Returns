@@ -19,7 +19,7 @@ def parse_holdings_upload(uploaded_file) -> pd.DataFrame:
 
 
 def fetch_live_prices(tickers: list) -> dict:
-    """Batch-fetch latest close price per ticker via yfinance."""
+    """Batch fetch latest close price per ticker via yfinance."""
     try:
         dl = yf.download(tickers, period="2d", progress=False, auto_adjust=True)
         if isinstance(dl.columns, pd.MultiIndex):

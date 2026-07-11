@@ -4,7 +4,7 @@ from scipy.optimize import brentq
 
 
 def xirr(cashflows: list, dates: list):
-    """Money-weighted annualized return (XIRR) via Brent's method."""
+    """Money weighted annualized return (XIRR) via Brent's method."""
     if len(cashflows) != len(dates) or len(cashflows) < 2:
         return None
     origin = dates[0]
@@ -27,7 +27,7 @@ def cagr(start_val: float, end_val: float, years: float):
 
 def future_value_with_contributions(present_value: float, monthly_contribution: float,
                                      annual_return: float, years: float):
-    """FV of a lump sum plus ordinary-annuity monthly contributions.
+    """FV of a lump sum plus ordinary annuity monthly contributions.
 
     FV = P(1+r)^n + C * [((1+r)^n - 1) / r], r = annual_return / 12, n = years * 12.
     """
@@ -41,7 +41,7 @@ def future_value_with_contributions(present_value: float, monthly_contribution: 
 
 def required_monthly_contribution(present_value: float, target_fv: float,
                                    annual_return: float, years: float):
-    """Monthly contribution needed to reach target_fv in `years` — closed-form (linear in C)."""
+    """Monthly contribution needed to reach target_fv in `years`. Closed form, linear in C."""
     r = annual_return / 12.0
     n = years * 12.0
     if n <= 0:
@@ -57,7 +57,7 @@ def required_monthly_contribution(present_value: float, target_fv: float,
 
 def years_to_reach_goal(present_value: float, monthly_contribution: float,
                          target_fv: float, annual_return: float):
-    """Years needed to reach target_fv — closed-form via logarithms, no root finder."""
+    """Years needed to reach target_fv. Closed form via logarithms, no root finder."""
     if present_value >= target_fv:
         return 0.0
     r = annual_return / 12.0

@@ -70,7 +70,7 @@ def render():
                     st.warning("Can't solve for this combination of inputs.")
                 elif req_contrib <= 0:
                     st.success(
-                        f"**You're already on track** — your current savings alone reach "
+                        f"**You're already on track.** Your current savings alone reach "
                         f"${target_fv:,.0f} in {years:.1f} years at this return."
                     )
                 else:
@@ -81,7 +81,7 @@ def render():
             else:
                 yrs_needed = years_to_reach_goal(current_savings, monthly_contrib, target_fv, annual_return)
                 if yrs_needed is None:
-                    st.warning("With these inputs, this goal isn't reachable — try a higher "
+                    st.warning("With these inputs, this goal isn't reachable. Try a higher "
                               "contribution or return.")
                 else:
                     st.info(

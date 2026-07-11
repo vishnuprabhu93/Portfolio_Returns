@@ -14,7 +14,7 @@ from theme import (
 
 def render():
     st.subheader("Portfolio Analyzer")
-    st.write("Upload your holdings — live prices are fetched automatically, "
+    st.write("Upload your holdings. Live prices are fetched automatically, "
              "and you get full P&L and risk metrics.")
 
     # Template download
@@ -52,7 +52,7 @@ def render():
             h["Ticker"] = h["Ticker"].str.upper().str.strip()
             tickers = h["Ticker"].tolist()
 
-            # Fetch live prices — batch download is more reliable than
+            # Fetch live prices. Batch download is more reliable than
             # calling fast_info individually (first call often returns None)
             with st.spinner("Fetching live prices…"):
                 try:
@@ -135,13 +135,13 @@ def render():
 
             # ── Risk metrics ──
             st.markdown("---")
-            st.markdown("#### Risk Metrics (Based on 1-Year Historical Returns)")
+            st.markdown("#### Risk Metrics (Based on 1 Year Historical Returns)")
 
             valid = h[h["Live_Price"].notna()]["Ticker"].tolist()
             if len(valid) == 0:
                 st.warning("No valid tickers found for risk analysis.")
             else:
-                with st.spinner("Downloading 1-year historical data…"):
+                with st.spinner("Downloading 1 year historical data…"):
                     try:
                         raw = yf.download(valid, period="1y", progress=False, auto_adjust=True)
                         if isinstance(raw.columns, pd.MultiIndex):

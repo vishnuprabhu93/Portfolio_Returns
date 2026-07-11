@@ -18,7 +18,7 @@ st.markdown(BASE_CSS, unsafe_allow_html=True)
 
 # ── Header ────────────────────────────────────────────────────────────────────
 st.title("📈 Investment Returns Calculator")
-st.caption("Five tools in one: lump-sum return · DCA / XIRR · portfolio P&L and risk · "
+st.caption("Five tools in one: lump sum return · DCA / XIRR · portfolio P&L and risk · "
           "goal projection · rebalancing helper")
 
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
@@ -46,4 +46,4 @@ with tab5:
 
 # ── Footer ────────────────────────────────────────────────────────────────────
 st.markdown("---")
-st.caption("Data via Yahoo Finance (yfinance). For informational purposes only — not financial advice.")
+st.caption("Data via Yahoo Finance (yfinance). For informational purposes only. Not financial advice.")

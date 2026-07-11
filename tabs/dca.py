@@ -11,7 +11,7 @@ from theme import COLOR_POSITIVE, COLOR_NEUTRAL_FILL, COLOR_GRAY, COLOR_HIGHLIGH
 
 def render():
     st.subheader("DCA / Periodic Investment Calculator")
-    st.write("Regular contributions over time — calculates XIRR (money-weighted annualized return).")
+    st.write("Regular contributions over time. Calculates XIRR, your money weighted annualized return.")
 
     input_mode = st.radio("How would you like to enter your contributions?",
                           ["Simple (regular fixed contributions)",
@@ -66,7 +66,7 @@ def render():
                 beat = xirr_val - 0.10
                 sign = "above" if beat >= 0 else "below"
                 st.info(
-                    f"**XIRR of {xirr_val * 100:.2f}%** — your money-weighted annualized return "
+                    f"**XIRR of {xirr_val * 100:.2f}%.** Your money weighted annualized return "
                     f"over {years_total:.1f} years, accounting for contribution timing. "
                     f"That's **{abs(beat) * 100:.1f}% {sign}** the historical S&P 500 average (~10%)."
                 )
@@ -81,7 +81,7 @@ def render():
             today = date.today()
             if today > last_contrib_date:
                 chart_d_ext  = chart_d  + [today]
-                cum_inv_ext  = cum_inv  + [total_invested]   # flat — no new money added
+                cum_inv_ext  = cum_inv  + [total_invested]   # flat, no new money added
             else:
                 chart_d_ext  = chart_d
                 cum_inv_ext  = cum_inv
@@ -150,7 +150,7 @@ def render():
                            key="adv_tmpl_dl")
 
         # File uploader
-        adv_upload = st.file_uploader("Upload your cash flow file (Excel or CSV) — or edit the table below",
+        adv_upload = st.file_uploader("Upload your cash flow file (Excel or CSV), or edit the table below",
                                       type=["xlsx", "csv"], key="adv_upload")
 
         # Populate table from upload if provided, otherwise use defaults

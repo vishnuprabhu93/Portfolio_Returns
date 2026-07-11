@@ -1,6 +1,6 @@
 # ── Color tokens (Terra palette) ─────────────────────────────────────────────
-COLOR_POSITIVE = "#2ca02c"   # gains — unchanged, already intuitive
-COLOR_NEGATIVE = "#d62728"   # losses — unchanged, already intuitive
+COLOR_POSITIVE = "#2ca02c"   # gains, unchanged, already intuitive
+COLOR_NEGATIVE = "#d62728"   # losses, unchanged, already intuitive
 
 COLOR_PRIMARY = "#B15E3B"                    # terracotta
 COLOR_PRIMARY_FILL = "rgba(177,94,59,0.12)"

@@ -17,7 +17,7 @@ def render():
         st.caption("Using the holdings you uploaded in the Portfolio Analyzer tab.")
         h = cached[["Ticker", "Current_Value"]].copy()
     else:
-        st.info("No holdings loaded yet from Portfolio Analyzer — upload your holdings below.")
+        st.info("No holdings loaded yet from Portfolio Analyzer. Upload your holdings below.")
 
         tmpl = pd.DataFrame({
             "Ticker":   ["AAPL", "MSFT", "GOOGL", "SPY", "NVDA"],
@@ -56,7 +56,7 @@ def render():
     h["Current_%"] = h["Current_Value"] / total_value * 100
 
     st.markdown("##### Set Target Weights")
-    st.caption("Defaults to your current weights — edit the Target % column below.")
+    st.caption("Defaults to your current weights. Edit the Target % column below.")
 
     edit_df = h[["Ticker", "Current_Value", "Current_%"]].copy()
     edit_df["Target_%"] = edit_df["Current_%"].round(2)
@@ -113,9 +113,9 @@ def render():
     }).map(highlight_action, subset=["Action"])
     st.dataframe(styled, use_container_width=True)
 
-    st.caption("Selling to rebalance may trigger capital gains taxes — this isn't tax advice.")
+    st.caption("Selling to rebalance may trigger capital gains taxes. This isn't tax advice.")
 
-    # ── Buy-only mode with additional cash ──
+    # ── Buy only mode with additional cash ──
     st.markdown("##### Invest New Cash Instead of Selling")
     additional_cash = st.number_input("Additional Cash to Invest ($)", min_value=0.0,
                                       value=0.0, step=100.0, key="rebal_cash")
@@ -131,7 +131,7 @@ def render():
 
         st.caption(
             "New cash is allocated across underweight positions in proportion to how far each is "
-            "below target — this avoids selling (and the capital gains that can trigger)."
+            "below target. This avoids selling, and the capital gains that can trigger."
         )
         buy_styled = buy_plan.style.format({"Underweight": "${:,.2f}", "Allocation": "${:,.2f}"})
         st.dataframe(buy_styled, use_container_width=True)
