@@ -2,7 +2,7 @@ import streamlit as st
 import warnings
 
 from theme import BASE_CSS
-from tabs import lump_sum, dca, portfolio_analyzer, goal_projection
+from tabs import lump_sum, dca, portfolio_analyzer, goal_projection, rebalancing
 
 warnings.filterwarnings("ignore")
 
@@ -18,13 +18,15 @@ st.markdown(BASE_CSS, unsafe_allow_html=True)
 
 # ── Header ────────────────────────────────────────────────────────────────────
 st.title("📈 Investment Returns Calculator")
-st.caption("Four tools in one: lump-sum return · DCA / XIRR · portfolio P&L and risk · goal projection")
+st.caption("Five tools in one: lump-sum return · DCA / XIRR · portfolio P&L and risk · "
+          "goal projection · rebalancing helper")
 
-tab1, tab2, tab3, tab4 = st.tabs([
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "💰  Lump Sum Return",
     "📅  DCA / Periodic Investment",
     "📊  Portfolio Analyzer",
     "🎯  Goal Projection",
+    "⚖️  Rebalancing Helper",
 ])
 
 with tab1:
@@ -38,6 +40,9 @@ with tab3:
 
 with tab4:
     goal_projection.render()
+
+with tab5:
+    rebalancing.render()
 
 # ── Footer ────────────────────────────────────────────────────────────────────
 st.markdown("---")
